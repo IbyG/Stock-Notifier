@@ -14,6 +14,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, WebDriverException
+from notifier import NtfyNotifier
 
 
 def scrape_vanguard_page(url):
@@ -82,12 +83,133 @@ def scrape_vanguard_page(url):
             driver.quit()
 
 
+def format_for_ntfy(headers, latest_row, previous_row=None):
+    """
+    Format price data for ntfy notifications (single line, text message style).
+    
+    Args:
+        headers: List of column headers
+        latest_row: Latest price data row
+        previous_row: Previous price data row (optional)
+        
+    Returns:
+        str: Formatted message for ntfy
+    """
+    # Extract key data
+    date = latest_row[0] if len(latest_row) > 0 else "N/A"
+    
+    # Determine table type and format accordingly
+    if 'Date' in headers and 'Buy' in headers and 'Sell' in headers:
+        # Daily prices table - shortened format to avoid truncation
+        buy_price = latest_row[1] if len(latest_row) > 1 else "N/A"
+        sell_price = latest_row[2] if len(latest_row) > 2 else "N/A"
+        
+        # Add price change if previous data available
+        if previous_row and len(latest_row) >= 2 and len(previous_row) >= 2:
+            try:
+                latest_price = float(latest_row[1].replace('$', '').replace(',', ''))
+                previous_price = float(previous_row[1].replace('$', '').replace(',', ''))
+                change = latest_price - previous_price
+                change_percent = (change / previous_price) * 100
+                
+                direction = "UP" if change > 0 else "DOWN" if change < 0 else "SAME"
+                # Shortened message to avoid truncation and emoji issues
+                message = f"VG Fund {date}: {buy_price}/{sell_price} {direction} {change_percent:+.1f}%"
+            except (ValueError, IndexError):
+                # Fallback to basic format if calculation fails
+                message = f"VG Fund {date}: Buy {buy_price}, Sell {sell_price}"
+        else:
+            # No previous data available
+            message = f"VG Fund {date}: Buy {buy_price}, Sell {sell_price}"
+    
+    elif 'Distribution date' in headers:
+        # Distribution table - shortened format
+        cpu = latest_row[1] if len(latest_row) > 1 else "N/A"
+        reinvest_price = latest_row[3] if len(latest_row) > 3 else "N/A"
+        
+        # Add price change if previous data available
+        if previous_row and len(latest_row) >= 4 and len(previous_row) >= 4:
+            try:
+                latest_price = float(latest_row[3].replace('$', '').replace(',', ''))
+                previous_price = float(previous_row[3].replace('$', '').replace(',', ''))
+                change = latest_price - previous_price
+                change_percent = (change / previous_price) * 100
+                
+                direction = "UP" if change > 0 else "DOWN" if change < 0 else "SAME"
+                # Shortened message to avoid truncation and emoji issues
+                message = f"VG Dist {date}: {reinvest_price} {direction} {change_percent:+.1f}%"
+            except (ValueError, IndexError):
+                # Fallback to basic format if calculation fails
+                message = f"VG Dist {date}: CPU {cpu}, Price {reinvest_price}"
+        else:
+            # No previous data available
+            message = f"VG Dist {date}: CPU {cpu}, Price {reinvest_price}"
+    
+    else:
+        # Generic format for other table types
+        message = f"VG Fund {date}"
+        for i, header in enumerate(headers[:3]):  # Show first 3 columns
+            if i < len(latest_row) and i > 0:  # Skip date (already shown)
+                value = latest_row[i]
+                message += f", {header}: {value}"
+    
+    return message
+
+
+def format_for_slack(headers, latest_row, previous_row=None):
+    """
+    Format price data for Slack messages.
+    
+    Args:
+        headers: List of column headers
+        latest_row: Latest price data row
+        previous_row: Previous price data row (optional)
+        
+    Returns:
+        str: Formatted message for Slack
+    """
+    message = "*📊 Vanguard Fund Price Update*\n\n"
+    message += "*Latest Price Data:*\n"
+    
+    # Format latest data
+    for i, header in enumerate(headers[:4]):
+        if i < len(latest_row):
+            value = latest_row[i]
+            message += f"• *{header}:* {value}\n"
+    
+    # Add previous data if available
+    if previous_row:
+        message += "\n*Previous Price Data:*\n"
+        for i, header in enumerate(headers[:4]):
+            if i < len(previous_row):
+                value = previous_row[i]
+                message += f"• *{header}:* {value}\n"
+        
+        # Calculate and add price change
+        if len(latest_row) >= 2 and len(previous_row) >= 2:
+            try:
+                latest_price = float(latest_row[1].replace('$', '').replace(',', ''))
+                previous_price = float(previous_row[1].replace('$', '').replace(',', ''))
+                change = latest_price - previous_price
+                change_percent = (change / previous_price) * 100
+                
+                direction = "📈 UP" if change > 0 else "📉 DOWN" if change < 0 else "➡️ UNCHANGED"
+                message += f"\n*Price Change:* ${change:+.4f} ({change_percent:+.2f}%) {direction}"
+            except (ValueError, IndexError):
+                message += "\n*Price change calculation not available*"
+    
+    return message
+
+
 def extract_historical_prices_table(soup):
     """
     Extract and display the historical prices table from the parsed HTML.
     
     Args:
         soup: BeautifulSoup object containing the parsed HTML
+        
+    Returns:
+        str: ntfy-formatted message or None if no valid data found
     """
     try:
         tables = soup.find_all('table')
@@ -95,7 +217,7 @@ def extract_historical_prices_table(soup):
         
         if not tables:
             print("No tables found on the page")
-            return
+            return None
         
         for i, table in enumerate(tables):
             print(f"\n--- Table {i+1} ---")
@@ -144,88 +266,127 @@ def extract_historical_prices_table(soup):
                             data_rows.append(row_data)
                 
                 if data_rows:
-                    # Display latest price data in table format
-                    print("\n" + "="*60)
-                    print("LATEST PRICE DATA")
-                    print("="*60)
-                    
-                    # Create table header
+                    # Get table headers
                     header_row = rows[0]  # First row contains headers
                     header_cells = header_row.find_all(['th', 'td'])
                     headers = [cell.get_text(strip=True) for cell in header_cells]
                     
-                    # Only use the first 4 columns to match the header structure
-                    # (Date, Buy, Sell, NAV)
-                    if len(headers) >= 4:
-                        headers = headers[:4]
-                    
-                    # Create table separator
-                    separator = "|" + "|".join(["-" * (max(len(h), 12) + 2) for h in headers]) + "|"
-                    
-                    # Print header row
-                    header_str = "|" + "|".join([f" {h:<{max(len(h), 12)}} " for h in headers]) + "|"
-                    print(header_str)
-                    print(separator)
-                    
-                    # Print latest price data (first data row)
                     latest_row = data_rows[0]
-                    # Only use first 4 columns to match headers
-                    if len(latest_row) >= 4:
-                        latest_row = latest_row[:4]
+                    previous_row = data_rows[1] if len(data_rows) > 1 else None
                     
-                    row_str = "|" + "|".join([f" {cell:<{max(len(headers[i]), 12)}} " for i, cell in enumerate(latest_row)]) + "|"
-                    print(row_str)
+                    # Display latest price data in Slack-compatible format
+                    print("\n" + "="*50)
+                    print("📊 LATEST PRICE DATA")
+                    print("="*50)
                     
-                    if len(data_rows) > 1:
-                        print("\n" + "="*60)
-                        print("PREVIOUS PRICE DATA")
-                        print("="*60)
-                        print(header_str)
-                        print(separator)
+                    # Display each field in Slack-compatible format
+                    for i, header in enumerate(headers[:4]):  # Only first 4 columns
+                        if i < len(latest_row):
+                            value = latest_row[i]
+                            print(f"*{header}:* {value}")
+                    
+                    if previous_row:
+                        print("\n" + "="*50)
+                        print("📈 PREVIOUS PRICE DATA")
+                        print("="*50)
                         
-                        # Print previous price data (second data row)
-                        previous_row = data_rows[1]
-                        # Only use first 4 columns to match headers
-                        if len(previous_row) >= 4:
-                            previous_row = previous_row[:4]
+                        # Display each field in Slack-compatible format
+                        for i, header in enumerate(headers[:4]):  # Only first 4 columns
+                            if i < len(previous_row):
+                                value = previous_row[i]
+                                print(f"*{header}:* {value}")
                         
-                        row_str = "|" + "|".join([f" {cell:<{max(len(headers[i]), 12)}} " for i, cell in enumerate(previous_row)]) + "|"
-                        print(row_str)
+                        # Show price change if possible
+                        if len(latest_row) >= 2 and len(previous_row) >= 2:
+                            try:
+                                latest_price = float(latest_row[1].replace('$', '').replace(',', ''))
+                                previous_price = float(previous_row[1].replace('$', '').replace(',', ''))
+                                change = latest_price - previous_price
+                                change_percent = (change / previous_price) * 100
+                                
+                                print("\n" + "="*50)
+                                print("📊 PRICE CHANGE")
+                                print("="*50)
+                                print(f"*Price Change:* ${change:+.4f}")
+                                print(f"*Change %:* {change_percent:+.2f}%")
+                                print(f"*Direction:* {'📈 UP' if change > 0 else '📉 DOWN' if change < 0 else '➡️ UNCHANGED'}")
+                            except (ValueError, IndexError):
+                                pass  # Skip price change calculation if data is invalid
+                    
+                    # Display ntfy-formatted message (single line, text message style)
+                    print("\n" + "="*60)
+                    print("NTFY MESSAGE FORMAT")
+                    print("="*60)
+                    ntfy_message = format_for_ntfy(headers, latest_row, previous_row)
+                    print(ntfy_message)
+                    
+                    # Display Slack-formatted message
+                    print("\n" + "="*60)
+                    print("SLACK MESSAGE FORMAT")
+                    print("="*60)
+                    slack_message = format_for_slack(headers, latest_row, previous_row)
+                    print(slack_message)
+                    
+                    # Return the ntfy message for the first valid table found
+                    return ntfy_message
                 
             else:
                 print("This doesn't appear to be a prices table")
             
     except Exception as e:
         print(f"Error extracting table data: {e}")
+    
+    return None
 
 
 def main():
     """Main function to run the scraper."""
+    # Initialize notifier
+    notifier = NtfyNotifier()
+    
     # Vanguard URL for the specific fund
     url = "https://www.vanguard.com.au/personal/invest-with-us/fund?portId=8134&tab=prices-and-distributions"
     
     print("Vanguard Stock Price Scraper")
     print("="*40)
     
-    # Scrape the page
-    soup = scrape_vanguard_page(url)
-    
-    if soup:
-        print("\nSuccessfully scraped the page!")
+    try:
+        # Scrape the page
+        soup = scrape_vanguard_page(url)
         
-        # Basic page analysis
-        print(f"\nPage title: {soup.title.string if soup.title else 'No title found'}")
-        
-        # Extract and display the historical prices table
-        print("\n" + "="*50)
-        print("EXTRACTING HISTORICAL PRICES TABLE")
-        print("="*50)
-        
-        extract_historical_prices_table(soup)
-        
-    else:
-        print("Failed to scrape the page. Please check your internet connection and try again.")
-        print("Note: You may need to install Chrome and ChromeDriver")
+        if soup:
+            print("\nSuccessfully scraped the page!")
+            
+            # Basic page analysis
+            print(f"\nPage title: {soup.title.string if soup.title else 'No title found'}")
+            
+            # Extract and display the historical prices table
+            print("\n" + "="*50)
+            print("EXTRACTING HISTORICAL PRICES TABLE")
+            print("="*50)
+            
+            # Extract data and get the ntfy message
+            ntfy_message = extract_historical_prices_table(soup)
+            
+            # Send notification if we got a valid message
+            if ntfy_message:
+                print("\n" + "="*50)
+                print("SENDING NOTIFICATION")
+                print("="*50)
+                notifier.send_price_update(ntfy_message)
+            else:
+                print("\nNo valid price data found to send notification")
+                
+        else:
+            error_msg = "Failed to scrape the page. Please check your internet connection and try again."
+            print(error_msg)
+            print("Note: You may need to install Chrome and ChromeDriver")
+            notifier.send_error_notification(error_msg)
+            
+    except Exception as e:
+        error_msg = f"Unexpected error occurred: {str(e)}"
+        print(f"\n❌ {error_msg}")
+        notifier.send_error_notification(error_msg)
 
 
 if __name__ == "__main__":
