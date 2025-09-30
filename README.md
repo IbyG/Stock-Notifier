@@ -2,6 +2,22 @@
 
 A Python application to scrape and monitor multiple Vanguard fund prices with automatic ntfy notifications for each fund.
 
+**📚 Educational Purpose**: This repository is intended for educational and learning purposes only.
+
+**📖 [Why This Tool Was Created](UseCase.md)** - Learn about the problem this tool solves and how it can help you save time monitoring your investments.
+
+## ⚠️ **IMPORTANT LEGAL NOTICE** ⚠️
+
+> **🚨 WARNING: Before using this application, you MUST obtain formal written approval from Vanguard's legal and compliance team. This tool accesses Vanguard's website and data in ways that may violate their Terms of Service.**
+> 
+> **📋 User Responsibility**: By downloading, cloning, or using this code, you acknowledge that:
+> - You are solely responsible for ensuring compliance with all applicable laws and Vanguard's Terms of Service
+> - You must obtain proper authorization from Vanguard before using this tool
+> - The author of this repository is not responsible for any legal consequences, account suspensions, or other issues that may arise from your use of this software
+> - You use this software at your own risk and assume full responsibility for your actions
+
+**🔒 Use this tool responsibly and in compliance with all applicable terms of service and laws.**
+
 ## Setup
 
 1. Install dependencies:
