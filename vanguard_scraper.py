@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 """
-Vanguard Stock Price Scraper
+Vanguard Multi-Fund Stock Price Scraper
 
 This script scrapes the Vanguard website to extract historical price data
-for the specified fund (portId=8134).
+for multiple funds configured in funds_config.yml.
+Each fund gets its own separate NTFY notification.
 """
 
 import time
+import yaml
+import os
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -339,23 +342,53 @@ def extract_historical_prices_table(soup):
     return None
 
 
-def main():
-    """Main function to run the scraper."""
-    # Initialize notifier
-    notifier = NtfyNotifier()
+def load_funds_config(config_path="funds_config.yml"):
+    """
+    Load funds configuration from YAML file.
     
-    # Vanguard URL for the specific fund
-    url = "https://www.vanguard.com.au/personal/invest-with-us/fund?portId=8134&tab=prices-and-distributions"
+    Args:
+        config_path (str): Path to the configuration file
+        
+    Returns:
+        list: List of fund configurations
+    """
+    try:
+        with open(config_path, 'r') as file:
+            config = yaml.safe_load(file)
+            return config.get('funds', [])
+    except FileNotFoundError:
+        print(f"❌ Configuration file '{config_path}' not found!")
+        return []
+    except yaml.YAMLError as e:
+        print(f"❌ Error parsing configuration file: {e}")
+        return []
+    except Exception as e:
+        print(f"❌ Unexpected error loading configuration: {e}")
+        return []
+
+
+def scrape_fund(fund_config, notifier):
+    """
+    Scrape a single fund and send notification.
     
-    print("Vanguard Stock Price Scraper")
-    print("="*40)
+    Args:
+        fund_config (dict): Fund configuration containing name and url
+        notifier (NtfyNotifier): The notification handler
+    """
+    fund_name = fund_config.get('name', 'Unknown Fund')
+    url = fund_config.get('url', '')
+    
+    print(f"\n{'='*60}")
+    print(f"SCRAPING: {fund_name}")
+    print(f"URL: {url}")
+    print(f"{'='*60}")
     
     try:
         # Scrape the page
         soup = scrape_vanguard_page(url)
         
         if soup:
-            print("\nSuccessfully scraped the page!")
+            print(f"\n✅ Successfully scraped {fund_name}!")
             
             # Basic page analysis
             print(f"\nPage title: {soup.title.string if soup.title else 'No title found'}")
@@ -373,20 +406,65 @@ def main():
                 print("\n" + "="*50)
                 print("SENDING NOTIFICATION")
                 print("="*50)
-                notifier.send_price_update(ntfy_message)
+                notifier.send_price_update(ntfy_message, fund_name)
             else:
-                print("\nNo valid price data found to send notification")
+                print(f"\n❌ No valid price data found for {fund_name}")
                 
         else:
-            error_msg = "Failed to scrape the page. Please check your internet connection and try again."
-            print(error_msg)
+            error_msg = f"Failed to scrape {fund_name}. Please check your internet connection and try again."
+            print(f"❌ {error_msg}")
             print("Note: You may need to install Chrome and ChromeDriver")
-            notifier.send_error_notification(error_msg)
+            notifier.send_error_notification(error_msg, fund_name)
             
     except Exception as e:
-        error_msg = f"Unexpected error occurred: {str(e)}"
+        error_msg = f"Unexpected error occurred while scraping {fund_name}: {str(e)}"
         print(f"\n❌ {error_msg}")
-        notifier.send_error_notification(error_msg)
+        notifier.send_error_notification(error_msg, fund_name)
+
+
+def main():
+    """Main function to run the scraper for multiple funds."""
+    # Initialize notifier
+    notifier = NtfyNotifier()
+    
+    print("Vanguard Multi-Fund Stock Price Scraper")
+    print("="*50)
+    
+    # Load funds configuration
+    funds = load_funds_config()
+    
+    if not funds:
+        print("❌ No funds configured. Please check your funds_config.yml file.")
+        return
+    
+    print(f"📊 Found {len(funds)} fund(s) to scrape:")
+    for i, fund in enumerate(funds, 1):
+        print(f"  {i}. {fund.get('name', 'Unknown Fund')}")
+    
+    # Process each fund
+    successful_scrapes = 0
+    failed_scrapes = 0
+    
+    for fund in funds:
+        try:
+            scrape_fund(fund, notifier)
+            successful_scrapes += 1
+        except Exception as e:
+            print(f"❌ Failed to process fund {fund.get('name', 'Unknown')}: {e}")
+            failed_scrapes += 1
+        
+        # Add a small delay between funds to be respectful to the server
+        if len(funds) > 1:
+            print("\n⏳ Waiting 3 seconds before next fund...")
+            time.sleep(3)
+    
+    # Summary
+    print(f"\n{'='*60}")
+    print("SCRAPING SUMMARY")
+    print(f"{'='*60}")
+    print(f"✅ Successful scrapes: {successful_scrapes}")
+    print(f"❌ Failed scrapes: {failed_scrapes}")
+    print(f"📊 Total funds processed: {len(funds)}")
 
 
 if __name__ == "__main__":

@@ -24,14 +24,17 @@ class NtfyNotifier:
         self.default_priority = os.getenv('NTFY_PRIORITY', 'default')
         self.default_tags = os.getenv('NTFY_TAGS', 'chart_with_upwards_trend,heavy_dollar_sign')
         
-    def send_price_update(self, message, title="Vanguard Fund Price Update"):
+    def send_price_update(self, message, fund_name="Vanguard Fund", title=None):
         """
         Send a price update notification via ntfy.
         
         Args:
             message (str): The message content to send
-            title (str): The notification title (optional)
+            fund_name (str): The name of the fund for the notification title
+            title (str): The notification title (optional, defaults to fund-specific title)
         """
+        if title is None:
+            title = f"{fund_name} Price Update"
         try:
             response = requests.post(
                 self.ntfy_url,
@@ -58,19 +61,20 @@ class NtfyNotifier:
             print(f"❌ Unexpected error sending notification: {e}")
             return False
     
-    def send_error_notification(self, error_message):
+    def send_error_notification(self, error_message, fund_name="Vanguard Fund"):
         """
         Send an error notification via ntfy.
         
         Args:
             error_message (str): The error message to send
+            fund_name (str): The name of the fund for the notification title
         """
         try:
             response = requests.post(
                 self.ntfy_url,
-                data=f"Error in Vanguard scraper: {error_message}",
+                data=f"Error in {fund_name} scraper: {error_message}",
                 headers={
-                    "Title": "Vanguard Scraper Error",
+                    "Title": f"{fund_name} Scraper Error",
                     "Priority": "high",
                     "Tags": "rotating_light,exclamation"
                 },
