@@ -148,8 +148,17 @@ Create a script called `run-stock-notifier.sh` in your project directory:
 # Change to the script's directory
 cd "$(dirname "$0")"
 
-# Build the image (optional - remove if image is already built)
-# docker build -t stock-notifier .
+# Check if the Docker image exists, build if it doesn't
+if ! docker image inspect stock-notifier >/dev/null 2>&1; then
+    echo "Docker image 'stock-notifier' not found. Building..."
+    docker build -t stock-notifier .
+    if [ $? -ne 0 ]; then
+        echo "Failed to build Docker image"
+        exit 1
+    fi
+else
+    echo "Docker image 'stock-notifier' found"
+fi
 
 # Run the container
 docker run --rm stock-notifier
@@ -163,6 +172,8 @@ Make the script executable:
 chmod +x run-stock-notifier.sh
 ```
 
+**Note**: This script automatically checks if the Docker image exists and builds it if needed, so you don't have to manually build the image before setting up the cronjob.
+
 #### Step 2: Set up the cronjob
 
 Open your crontab for editing:
@@ -173,15 +184,16 @@ crontab -e
 Add the following line to run the scraper at 6 AM every day:
 ```bash
 # Run Stock Notifier every day at 6:00 AM
-0 6 * * * /home/armini/Documents/Stock-Notifier/run-stock-notifier.sh >> /home/armini/Documents/Stock-Notifier/cron.log 2>&1
+0 6 * * * /Absolute/Path/To/Stock-Notifier/run-stock-notifier.sh >> /Absolute/Path/To/Stock-Notifier/cron.log 2>&1
 ```
 
 **Important Notes:**
-- Replace `/home/armini/Documents/Stock-Notifier/` with the actual absolute path to your project directory
+- Replace `/Absolute/Path/To/Stock-Notifier/` with the actual absolute path to your project directory
 - The output will be logged to `cron.log` in your project directory
 - The Docker container automatically spins down after execution due to the `--rm` flag
-- Ensure Docker is running and the image is built before the cronjob runs
-- To view cronjob logs: `tail -f /home/armini/Documents/Stock-Notifier/cron.log`
+- The wrapper script automatically builds the image if it doesn't exist, so no manual build is required
+- Ensure Docker daemon is running on your system
+- To view cronjob logs: `tail -f /Absolute/Path/To/Stock-Notifier/cron.log`
 
 #### Step 3: Verify the cronjob
 
@@ -190,8 +202,26 @@ To verify your cronjob is set up correctly:
 # List all cronjobs
 crontab -l
 
+# Check if Docker image exists
+docker images stock-notifier
+
 # Test the wrapper script manually
-/home/armini/Documents/Stock-Notifier/run-stock-notifier.sh
+/Absolute/Path/To/Stock-Notifier/run-stock-notifier.sh
+```
+
+**Useful Docker commands:**
+```bash
+# Check if the Docker image exists
+docker images stock-notifier
+
+# View all Docker images
+docker images
+
+# Manually build the image (if needed)
+docker build -t stock-notifier .
+
+# Remove the image to force a rebuild
+docker rmi stock-notifier
 ```
 
 #### Alternative: Using systemd timer (for more control)
@@ -207,14 +237,16 @@ Requires=docker.service
 
 [Service]
 Type=oneshot
-WorkingDirectory=/home/armini/Documents/Stock-Notifier
+WorkingDirectory=/Absolute/Path/To/Stock-Notifier
 ExecStart=/usr/bin/docker run --rm stock-notifier
-StandardOutput=append:/home/armini/Documents/Stock-Notifier/cron.log
-StandardError=append:/home/armini/Documents/Stock-Notifier/cron.log
+StandardOutput=append:/Absolute/Path/To/Stock-Notifier/cron.log
+StandardError=append:/Absolute/Path/To/Stock-Notifier/cron.log
 
 [Install]
 WantedBy=multi-user.target
 ```
+
+**Note**: Replace `/Absolute/Path/To/Stock-Notifier` with your actual project directory path.
 
 **stock-notifier.timer**:
 ```ini
