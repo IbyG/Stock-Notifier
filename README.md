@@ -2,6 +2,8 @@
 
 A Python application to scrape and monitor multiple Vanguard fund prices with automatic ntfy notifications for each fund.
 
+**🌐 [View Landing Page](landing-page/index.html)** - Professional overview of the project with features and quick start guide.
+
 **📚 Educational Purpose**: This repository is intended for educational and learning purposes only.
 
 **📖 [Why This Tool Was Created](UseCase.md)** - Learn about the problem this tool solves and how it can help you save time monitoring your investments.
@@ -312,3 +314,9 @@ To monitor additional funds:
 4. Run the scraper - it will automatically process all configured funds
 
 For more details, see the [Multi-Fund Configuration Guide](MultiFundGuide.md).
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+**Important:** The MIT License covers the code itself. Users are still solely responsible for ensuring their use complies with Vanguard's Terms of Service and all applicable laws. See the legal notice at the top of this README for more information.

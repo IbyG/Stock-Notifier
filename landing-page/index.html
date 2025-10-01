@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Monitor multiple Vanguard fund prices with automated notifications. Save time and improve investment oversight with Stock Notifier.">
+    <title>Stock Notifier - Monitor Vanguard Funds Seamlessly</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="brand-name">Stock Notifier</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#how-it-works" class="nav-link">How It Works</a>
+                <a href="#compliance" class="nav-link">Legal Notice</a>
+                <a href="#quick-start" class="nav-link">Quick Start</a>
+                <a href="https://github.com/IbyG/Stock-Notifier" class="btn btn-secondary" target="_blank">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    GitHub
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">Monitor Vanguard Index Funds <span class="gradient-text">Seamlessly</span></h1>
+                    <p class="hero-description">Automated price monitoring with instant notifications. Save time, improve investment oversight, and make informed decisions with real-time updates delivered directly to your phone.</p>
+                    <div class="hero-buttons">
+                        <a href="#quick-start" class="btn btn-primary btn-large">Get Started</a>
+                        <a href="https://github.com/IbyG/Stock-Notifier" class="btn btn-outline btn-large" target="_blank">View on GitHub</a>
+                    </div>
+                    <div class="hero-note">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Educational Purpose Only - <a href="#compliance" style="color: inherit; text-decoration: underline;">Read the compliance notice</a></span>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="notification-card">
+                        <div class="notification-header">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Stock Notifier</span>
+                        </div>
+                        <div class="notification-body">
+                            <div class="notification-title">Vanguard Australian Shares Index Fund</div>
+                            <div class="notification-text">Unit Price: $366.74 | Change: +0.74% | Date: 26 Sep 2024</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Flow Diagram Section -->
+    <section class="flow-diagram">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Data Flow Overview</h2>
+                <p class="section-description">Simple, automated data flow from Vanguard to your device</p>
+            </div>
+            <div class="flow-container">
+                <div class="flow-item">
+                    <div class="flow-icon vanguard-icon">
+                        <img src="https://play-lh.googleusercontent.com/l-aJWfSH0IKc-D2rlChtAJ3WHKpqQha_bvbfUhc4z_8cejmCnypeOwVu-mvzYwI62Q=w240-h480-rw" alt="Vanguard Logo" />
+                    </div>
+                    <h3 class="flow-title">Vanguard</h3>
+                    <p class="flow-description">Historical fund prices & data</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <svg viewBox="0 0 100 40" fill="none">
+                        <path d="M 5 20 L 85 20" stroke="currentColor" stroke-width="3" stroke-dasharray="5,5"/>
+                        <path d="M 75 10 L 95 20 L 75 30" fill="currentColor"/>
+                    </svg>
+                    <span class="flow-arrow-label">Scrapes Data</span>
+                </div>
+
+                <div class="flow-item">
+                    <div class="flow-icon python-icon">
+                        <svg viewBox="0 0 100 100" fill="none">
+                            <defs>
+                                <linearGradient id="blue-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#3776AB;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#5A9FD4;stop-opacity:1" />
+                                </linearGradient>
+                                <linearGradient id="yellow-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#FFD43B;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#FFC331;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <path d="M 50,10 L 40,10 Q 20,10 20,30 L 20,45 L 35,45 L 35,48 L 20,48 Q 10,48 10,58 L 10,70 Q 10,80 20,80 L 35,80 L 35,65 Q 35,55 45,55 L 55,55 Q 65,55 65,45 L 65,30 Q 65,10 50,10 Z" fill="url(#blue-grad)"/>
+                            <circle cx="28" cy="25" r="3" fill="#fff"/>
+                            <path d="M 50,90 L 60,90 Q 80,90 80,70 L 80,55 L 65,55 L 65,52 L 80,52 Q 90,52 90,42 L 90,30 Q 90,20 80,20 L 65,20 L 65,35 Q 65,45 55,45 L 45,45 Q 35,45 35,55 L 35,70 Q 35,90 50,90 Z" fill="url(#yellow-grad)"/>
+                            <circle cx="72" cy="75" r="3" fill="#fff"/>
+                        </svg>
+                    </div>
+                    <h3 class="flow-title">Python Script</h3>
+                    <p class="flow-description">Processes & formats data</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <svg viewBox="0 0 100 40" fill="none">
+                        <path d="M 5 20 L 85 20" stroke="currentColor" stroke-width="3" stroke-dasharray="5,5"/>
+                        <path d="M 75 10 L 95 20 L 75 30" fill="currentColor"/>
+                    </svg>
+                    <span class="flow-arrow-label">Sends Alert</span>
+                </div>
+
+                <div class="flow-item">
+                    <div class="flow-icon ntfy-icon">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNgMGeMvrtW7NVuSQVYttsMSUUjNip04zTRw&s" alt="ntfy Logo" />
+                    </div>
+                    <h3 class="flow-title">ntfy</h3>
+                    <p class="flow-description">Instant notifications</p>
+                </div>
+            </div>
+
+            <!-- Flow Preview Images -->
+            <div class="flow-preview-grid">
+                <div class="flow-preview-item">
+                    <div class="flow-preview-image">
+                        <img src="images/vanguard price left side.png" alt="Vanguard Historical Prices Table" />
+                    </div>
+                    <p class="flow-preview-caption">Real-time price data from Vanguard</p>
+                </div>
+
+                <div class="flow-preview-item">
+                    <div class="flow-preview-image">
+                        <img src="images/ntfy message flow right.png" alt="ntfy Notification Example" />
+                    </div>
+                    <p class="flow-preview-caption">Instant notification on your phone</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Powerful Features for Investment Monitoring</h2>
+                <p class="section-description">Everything you need to stay informed about your Vanguard investments</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M13 3v6h6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Multi-Fund Support</h3>
+                    <p class="feature-description">Monitor multiple Vanguard funds simultaneously with easy YAML configuration. Each fund gets its own dedicated notification.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Instant Notifications</h3>
+                    <p class="feature-description">Receive real-time price updates via ntfy notifications directly to your phone, terminal, or Slack channels.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Automated Scraping</h3>
+                    <p class="feature-description">Set up once and let it run automatically via cronjob or systemd timer. No manual intervention required.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Docker Support</h3>
+                    <p class="feature-description">Containerized deployment with Chrome and ChromeDriver pre-installed. Run anywhere with consistent results.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Error Handling</h3>
+                    <p class="feature-description">Robust error handling with fund-specific alerts. Detailed logging helps troubleshoot any issues quickly.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Multiple Output Formats</h3>
+                    <p class="feature-description">Choose between terminal display, Slack format, or ntfy notifications based on your preference and use case.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-description">Simple, automated workflow from configuration to notification</p>
+            </div>
+            <div class="workflow">
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Configure</h3>
+                        <p class="step-description">Set up your funds in <code>funds_config.yml</code> and configure notification preferences in the <code>.env</code> file.</p>
+                    </div>
+                </div>
+                <div class="workflow-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M13 5l7 7-7 7M5 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Scrape</h3>
+                        <p class="step-description">The scraper automatically visits Vanguard's website, extracts price data, and processes historical information for each configured fund.</p>
+                    </div>
+                </div>
+                <div class="workflow-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M13 5l7 7-7 7M5 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Notify</h3>
+                        <p class="step-description">Receive instant notifications with price updates, changes, and fund performance delivered to your preferred platform.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Compliance Section -->
+    <section id="compliance" class="compliance">
+        <div class="container">
+            <div class="compliance-box">
+                <div class="compliance-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="compliance-content">
+                    <h3 class="compliance-title">Important Legal Notice</h3>
+                    <div class="compliance-text">
+                        <p><strong>⚠️ WARNING:</strong> Before using this application, you MUST obtain formal written approval from Vanguard's legal and compliance team. This tool accesses Vanguard's website and data in ways that may violate their Terms of Service.</p>
+                        <p><strong>📚 Educational Purpose:</strong> This repository is intended for educational and learning purposes only.</p>
+                        <p><strong>📋 User Responsibility:</strong> By downloading, cloning, or using this code, you acknowledge that:</p>
+                        <ul>
+                            <li>You are solely responsible for ensuring compliance with all applicable laws and Vanguard's Terms of Service</li>
+                            <li>You must obtain proper authorization from Vanguard before using this tool</li>
+                            <li>The author of this repository is not responsible for any legal consequences, account suspensions, or other issues that may arise from your use of this software</li>
+                            <li>You use this software at your own risk and assume full responsibility for your actions</li>
+                        </ul>
+                        <p><strong>🔒 Use this tool responsibly and in compliance with all applicable terms of service and laws.</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Start Section -->
+    <section id="quick-start" class="quick-start">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Quick Start Guide</h2>
+                <p class="section-description">Get up and running in minutes</p>
+            </div>
+            <div class="quick-start-content">
+                <div class="installation-tabs">
+                    <button class="tab-button active" data-tab="docker">Docker (Recommended)</button>
+                    <button class="tab-button" data-tab="local">Local Installation</button>
+                </div>
+                
+                <div class="tab-content active" id="docker">
+                    <div class="step-list">
+                        <div class="install-step">
+                            <div class="install-step-number">1</div>
+                            <div class="install-step-content">
+                                <h4>Clone the Repository</h4>
+                                <div class="code-block">
+                                    <code>git clone https://github.com/IbyG/Stock-Notifier.git
+cd Stock-Notifier</code>
+                                    <button class="copy-btn" data-clipboard="git clone https://github.com/IbyG/Stock-Notifier.git
+cd Stock-Notifier">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                            <path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="install-step">
+                            <div class="install-step-number">2</div>
+                            <div class="install-step-content">
+                                <h4>Configure Environment</h4>
+                                <div class="code-block">
+                                    <code>cp .env.example .env
+nano .env  # Add your ntfy server details</code>
+                                    <button class="copy-btn" data-clipboard="cp .env.example .env">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                            <path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="install-step">
+                            <div class="install-step-number">3</div>
+                            <div class="install-step-content">
+                                <h4>Configure Funds</h4>
+                                <div class="code-block">
+                                    <code>nano funds_config.yml  # Add your Vanguard funds</code>
+                                    <button class="copy-btn" data-clipboard="nano funds_config.yml">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                            <path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="install-step">
+                            <div class="install-step-number">4</div>
+                            <div class="install-step-content">
+                                <h4>Build and Run</h4>
+                                <div class="code-block">
+                                    <code>docker build -t stock-notifier .
+docker run --rm stock-notifier</code>
+                                    <button class="copy-btn" data-clipboard="docker build -t stock-notifier .
+docker run --rm stock-notifier">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                            <path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="local">
+                    <div class="step-list">
+                        <div class="install-step">
+                            <div class="install-step-number">1</div>
+                            <div class="install-step-content">
+                                <h4>Clone the Repository</h4>
+                                <div class="code-block">
+                                    <code>git clone https://github.com/IbyG/Stock-Notifier.git
+cd Stock-Notifier</code>
+                                    <button class="copy-btn" data-clipboard="git clone https://github.com/IbyG/Stock-Notifier.git
+cd Stock-Notifier">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                            <path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="install-step">
+                            <div class="install-step-number">2</div>
+                            <div class="install-step-content">
+                                <h4>Install Dependencies</h4>
+                                <div class="code-block">
+                                    <code>pip install -r requirements.txt</code>
+                                    <button class="copy-btn" data-clipboard="pip install -r requirements.txt">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                            <path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="install-step">
+                            <div class="install-step-number">3</div>
+                            <div class="install-step-content">
+                                <h4>Configure Environment and Funds</h4>
+                                <div class="code-block">
+                                    <code>cp .env.example .env
+nano .env  # Add your ntfy server details
+nano funds_config.yml  # Add your Vanguard funds</code>
+                                    <button class="copy-btn" data-clipboard="cp .env.example .env">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                            <path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="install-step">
+                            <div class="install-step-number">4</div>
+                            <div class="install-step-content">
+                                <h4>Run the Scraper</h4>
+                                <div class="code-block">
+                                    <code>python vanguard_scraper.py</code>
+                                    <button class="copy-btn" data-clipboard="python vanguard_scraper.py">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                            <path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="brand-name">Stock Notifier</span>
+                </div>
+                <div class="footer-links">
+                    <a href="https://github.com/IbyG/Stock-Notifier" target="_blank" class="footer-link">
+                        <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        GitHub Repository
+                    </a>
+                    <a href="https://github.com/IbyG/Stock-Notifier/blob/master/README.md" target="_blank" class="footer-link">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Documentation
+                    </a>
+                    <a href="https://github.com/IbyG/Stock-Notifier/issues" target="_blank" class="footer-link">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Report Issue
+                    </a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Stock Notifier. Licensed under the MIT License. For educational purposes only. Use at your own risk.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

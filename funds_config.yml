@@ -4,15 +4,15 @@
 funds:
   - name: "Vanguard Australian Shares Index Fund"
     url: "https://www.vanguard.com.au/personal/invest-with-us/fund?portId=8110&tab=prices-and-distributions"
-    port_id: "8134"
+    port_id: "8110"
     
   - name: "Vanguard Growth Index Fund"
     url: "https://www.vanguard.com.au/personal/invest-with-us/fund?portId=8133&tab=prices-and-distributions"
-    port_id: "8135"
+    port_id: "8133"
     
   - name: "Vanguard High Growth Index Fund"
     url: "https://www.vanguard.com.au/personal/invest-with-us/fund?portId=8134&tab=prices-and-distributions"
-    port_id: "8136"
+    port_id: "8134"
 
 # Note: You can add more funds by following the same format:
 # - name: "Fund Name"

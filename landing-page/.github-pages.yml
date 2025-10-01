@@ -1,0 +1,33 @@
+# GitHub Pages Configuration (Optional)
+# This file can be renamed to netlify.toml or vercel.json for those platforms
+
+# GitHub Pages doesn't require configuration files
+# This file is for reference only
+
+# If you need redirects or custom headers, create a _config.yml:
+# ---
+# title: Stock Notifier
+# description: Monitor Vanguard funds with automated notifications
+# theme: null
+# ---
+
+# For custom 404 page, create 404.html in this directory
+# For custom domain, create CNAME file with your domain name
+
+# Example netlify.toml (if using Netlify):
+# [build]
+#   publish = "landing-page"
+#   command = ""
+#
+# [[redirects]]
+#   from = "/*"
+#   to = "/index.html"
+#   status = 200
+
+# Example vercel.json (if using Vercel):
+# {
+#   "buildCommand": "",
+#   "outputDirectory": "landing-page",
+#   "devCommand": "python -m http.server 8000"
+# }
+
