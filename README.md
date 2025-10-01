@@ -20,6 +20,8 @@ A Python application to scrape and monitor multiple Vanguard fund prices with au
 
 ## Setup
 
+### Option 1: Local Installation
+
 1. Install dependencies:
 ```bash
 pip install -r requirements.txt
@@ -46,6 +48,32 @@ See [Multi-Fund Configuration Guide](MultiFundGuide.md) for detailed instruction
 ```bash
 python vanguard_scraper.py
 ```
+
+### Option 2: Docker (Recommended)
+
+1. Configure your environment and funds:
+```bash
+# Copy the example environment file
+cp .env.example .env
+
+# Edit the .env file with your ntfy server details
+nano .env
+
+# Edit funds_config.yml to add/modify the Vanguard funds you want to monitor
+nano funds_config.yml
+```
+
+2. Build the Docker image:
+```bash
+docker build -t stock-notifier .
+```
+
+3. Run the container:
+```bash
+docker run --rm stock-notifier
+```
+
+**Note**: The Docker container includes Chrome and ChromeDriver pre-installed, making it easier to run on any system without manual setup.
 
 ## Features
 
@@ -105,6 +133,114 @@ python vanguard_scraper.py
 python notifier.py
 ```
 
+### Automated Scheduling with Cronjob
+
+To run the scraper automatically every day at 6 AM, you can set up a cronjob that spins up the Docker container, executes the scraper, and then cleans up.
+
+#### Step 1: Create a wrapper script
+
+Create a script called `run-stock-notifier.sh` in your project directory:
+
+```bash
+#!/bin/bash
+# Script to run Stock Notifier in Docker
+
+# Change to the script's directory
+cd "$(dirname "$0")"
+
+# Build the image (optional - remove if image is already built)
+# docker build -t stock-notifier .
+
+# Run the container
+docker run --rm stock-notifier
+
+# Exit with the same status as the docker command
+exit $?
+```
+
+Make the script executable:
+```bash
+chmod +x run-stock-notifier.sh
+```
+
+#### Step 2: Set up the cronjob
+
+Open your crontab for editing:
+```bash
+crontab -e
+```
+
+Add the following line to run the scraper at 6 AM every day:
+```bash
+# Run Stock Notifier every day at 6:00 AM
+0 6 * * * /home/armini/Documents/Stock-Notifier/run-stock-notifier.sh >> /home/armini/Documents/Stock-Notifier/cron.log 2>&1
+```
+
+**Important Notes:**
+- Replace `/home/armini/Documents/Stock-Notifier/` with the actual absolute path to your project directory
+- The output will be logged to `cron.log` in your project directory
+- The Docker container automatically spins down after execution due to the `--rm` flag
+- Ensure Docker is running and the image is built before the cronjob runs
+- To view cronjob logs: `tail -f /home/armini/Documents/Stock-Notifier/cron.log`
+
+#### Step 3: Verify the cronjob
+
+To verify your cronjob is set up correctly:
+```bash
+# List all cronjobs
+crontab -l
+
+# Test the wrapper script manually
+/home/armini/Documents/Stock-Notifier/run-stock-notifier.sh
+```
+
+#### Alternative: Using systemd timer (for more control)
+
+If you prefer systemd timers over cron, create two files:
+
+**stock-notifier.service**:
+```ini
+[Unit]
+Description=Stock Notifier Service
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/armini/Documents/Stock-Notifier
+ExecStart=/usr/bin/docker run --rm stock-notifier
+StandardOutput=append:/home/armini/Documents/Stock-Notifier/cron.log
+StandardError=append:/home/armini/Documents/Stock-Notifier/cron.log
+
+[Install]
+WantedBy=multi-user.target
+```
+
+**stock-notifier.timer**:
+```ini
+[Unit]
+Description=Run Stock Notifier daily at 6 AM
+
+[Timer]
+OnCalendar=*-*-* 06:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+```
+
+Enable and start the timer:
+```bash
+sudo cp stock-notifier.service stock-notifier.timer /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable stock-notifier.timer
+sudo systemctl start stock-notifier.timer
+
+# Check timer status
+sudo systemctl status stock-notifier.timer
+sudo systemctl list-timers --all | grep stock-notifier
+```
+
 ## Output Formats
 
 The script provides three output formats:
@@ -122,6 +258,9 @@ The script provides three output formats:
 - `.env` - Environment configuration (not tracked in git)
 - `.env.example` - Example environment configuration
 - `requirements.txt` - Python dependencies
+- `Dockerfile` - Docker configuration for containerized deployment
+- `.dockerignore` - Files to exclude from Docker build
+- `run-stock-notifier.sh` - Wrapper script for cronjob execution (optional)
 
 ## How It Works
 
